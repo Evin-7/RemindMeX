@@ -1,13 +1,12 @@
 import { Stack } from "expo-router";
 import {
-  ThemeProvider,
+  ThemeProvider as NavigationThemeProvider,
   DarkTheme,
   DefaultTheme,
 } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { View, ActivityIndicator } from "react-native";
-import { useColorScheme } from "@/hooks/use-color-scheme";
-
+import { ThemeProvider, useTheme } from "@/contexts/ThemeContext";
 import {
   useFonts,
   Poppins_400Regular,
@@ -20,9 +19,23 @@ import {
   Poppins_700Bold_Italic,
 } from "@expo-google-fonts/poppins";
 
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
+function RootLayoutNav() {
+  const { effectiveTheme } = useTheme();
 
+  return (
+    <NavigationThemeProvider
+      value={effectiveTheme === "dark" ? DarkTheme : DefaultTheme}
+    >
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="splash" />
+        <Stack.Screen name="index" />
+      </Stack>
+      <StatusBar style={effectiveTheme === "dark" ? "light" : "dark"} />
+    </NavigationThemeProvider>
+  );
+}
+
+export default function RootLayout() {
   const [fontsLoaded] = useFonts({
     Poppins_400Regular,
     Poppins_500Medium,
@@ -43,12 +56,8 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="splash" />
-        <Stack.Screen name="index" />
-      </Stack>
-      <StatusBar style="auto" />
+    <ThemeProvider>
+      <RootLayoutNav />
     </ThemeProvider>
   );
 }
