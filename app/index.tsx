@@ -1,9 +1,12 @@
-import { View, Text } from "react-native";
+import "../global.css";
+import { Text, View } from "react-native";
 
-export default function HomeScreen() {
+export default function App() {
   return (
-    <View >
-      <Text >home content</Text>
+    <View className="flex-1 items-center justify-center bg-black">
+      <Text className="text-xl font-bold text-blue-500">
+        Welcome to ReminMex
+      </Text>
     </View>
   );
 }
