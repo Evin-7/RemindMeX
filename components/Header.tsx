@@ -13,7 +13,6 @@ export default function Header() {
       }`}
     >
       <View className="flex-row items-center justify-between ">
-        {/* Logo + Text */}
         <View className="flex-row items-center">
           <Image
             source={require("@/assets/icons/MainLogo.png")}
@@ -24,8 +23,6 @@ export default function Header() {
             RemindMeX
           </Text>
         </View>
-
-        {/* Theme Toggle and Text */}
         <View className="flex-row items-center">
           <Text className="text-white text-sm mr-2 font-poppins">
             Change Theme

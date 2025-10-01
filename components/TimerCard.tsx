@@ -9,6 +9,8 @@ import Animated, {
   useAnimatedStyle,
   withSpring,
 } from "react-native-reanimated";
+import Svg, { Circle } from "react-native-svg";
+import { Play, Pause, RotateCcw, Trash2, RefreshCw } from "lucide-react-native";
 
 interface TimerCardProps {
   timer: Timer;
@@ -71,13 +73,42 @@ export default function TimerCard({
   const getButtonText = () => {
     switch (timer.status) {
       case "running":
-        return "⏸ Pause";
+        return "Pause";
       case "paused":
-        return "▶ Resume";
+        return "Resume";
       case "completed":
-        return "🔄 Restart";
+        return "Restart";
       default:
-        return "▶ Start";
+        return "Start";
+    }
+  };
+
+  const getButtonIcon = () => {
+    const iconColor = "#FFFFFF";
+    const iconSize = 18;
+
+    switch (timer.status) {
+      case "running":
+        return <Pause size={iconSize} color={iconColor} fill={iconColor} />;
+      case "paused":
+        return <Play size={iconSize} color={iconColor} fill={iconColor} />;
+      case "completed":
+        return <RefreshCw size={iconSize} color={iconColor} />;
+      default:
+        return <Play size={iconSize} color={iconColor} fill={iconColor} />;
+    }
+  };
+
+  const getStatusColor = () => {
+    switch (timer.status) {
+      case "running":
+        return "#2E6F40";
+      case "paused":
+        return "#F59E0B";
+      case "completed":
+        return "#2E6F40";
+      default:
+        return isDark ? "#6B7280" : "#9CA3AF";
     }
   };
 
@@ -93,11 +124,11 @@ export default function TimerCard({
             backgroundColor: isDark ? "#374151" : "#E5E7EB",
             justifyContent: "center",
             alignItems: "center",
-            width: 80,
-            marginLeft: 8,
+            width: 70,
+            marginLeft: 6,
           }}
         >
-          <Text className="text-2xl">↺</Text>
+          <RotateCcw size={20} color={isDark ? "#D1D5DB" : "#374151"} />
           <Text
             className={`text-xs font-poppins-medium mt-1 ${
               isDark ? "text-gray-300" : "text-gray-700"
@@ -116,13 +147,13 @@ export default function TimerCard({
           backgroundColor: "#EF4444",
           justifyContent: "center",
           alignItems: "center",
-          width: 80,
-          marginLeft: 8,
-          borderTopRightRadius: 16,
-          borderBottomRightRadius: 16,
+          width: 70,
+          marginLeft: 6,
+          borderTopRightRadius: 12,
+          borderBottomRightRadius: 12,
         }}
       >
-        <Text className="text-2xl">🗑️</Text>
+        <Trash2 size={20} color="#FFFFFF" />
         <Text className="text-xs font-poppins-medium mt-1 text-white">
           Delete
         </Text>
@@ -142,13 +173,13 @@ export default function TimerCard({
             backgroundColor: "#F59E0B",
             justifyContent: "center",
             alignItems: "center",
-            width: 80,
-            marginRight: 8,
-            borderTopLeftRadius: 16,
-            borderBottomLeftRadius: 16,
+            width: 70,
+            marginRight: 6,
+            borderTopLeftRadius: 12,
+            borderBottomLeftRadius: 12,
           }}
         >
-          <Text className="text-2xl">⏸</Text>
+          <Pause size={20} color="#FFFFFF" />
           <Text className="text-xs font-poppins-medium mt-1 text-white">
             Pause
           </Text>
@@ -162,16 +193,16 @@ export default function TimerCard({
             swipeableRef.current?.close();
           }}
           style={{
-            backgroundColor: "#10B981",
+            backgroundColor: "#2E6F40",
             justifyContent: "center",
             alignItems: "center",
-            width: 80,
-            marginRight: 8,
-            borderTopLeftRadius: 16,
-            borderBottomLeftRadius: 16,
+            width: 70,
+            marginRight: 6,
+            borderTopLeftRadius: 12,
+            borderBottomLeftRadius: 12,
           }}
         >
-          <Text className="text-2xl">▶</Text>
+          <Play size={20} color="#FFFFFF" fill="#FFFFFF" />
           <Text className="text-xs font-poppins-medium mt-1 text-white">
             Resume
           </Text>
@@ -181,8 +212,14 @@ export default function TimerCard({
     return null;
   };
 
+  const size = 110;
+  const strokeWidth = 5;
+  const radius = (size - strokeWidth) / 2;
+  const circumference = radius * 2 * Math.PI;
+  const progressOffset = circumference - (progress / 100) * circumference;
+
   return (
-    <Animated.View style={[{ marginBottom: 16 }, animatedStyle]}>
+    <Animated.View style={[{ marginBottom: 10 }, animatedStyle]}>
       <Swipeable
         ref={swipeableRef}
         renderLeftActions={renderLeftActions}
@@ -196,30 +233,19 @@ export default function TimerCard({
           activeOpacity={0.9}
         >
           <View
-            className={`rounded-2xl shadow-lightGreen overflow-hidden ${
+            className={`rounded-xl shadow-md overflow-hidden ${
               isDark ? "bg-gray-800" : "bg-white"
             }`}
+            style={{
+              borderLeftWidth: 3,
+              borderLeftColor: getStatusColor(),
+            }}
           >
-            <View className={`h-2 ${isDark ? "bg-gray-700" : "bg-gray-200"}`}>
-              <View
-                className={`${
-                  timer.status === "completed"
-                    ? "bg-lightGreen"
-                    : timer.status === "running"
-                      ? "bg-darkGreen"
-                      : timer.status === "paused"
-                        ? "bg-yellow-500"
-                        : "bg-gray-400"
-                }`}
-                style={{ width: `${progress}%`, height: "100%" }}
-              />
-            </View>
-
-            <View className="p-4">
-              <View className="flex-row justify-between items-start mb-3">
-                <View className="flex-1">
+            <View className="p-3">
+              <View className="flex-row justify-between items-start mb-2">
+                <View className="flex-1 pr-2">
                   <Text
-                    className={`text-xl font-poppins-semibold ${
+                    className={`text-base font-poppins-semibold ${
                       isDark ? "text-white" : "text-gray-900"
                     }`}
                     numberOfLines={2}
@@ -227,84 +253,132 @@ export default function TimerCard({
                     {timer.label}
                   </Text>
                   {timer.recurring?.enabled && (
-                    <Text
-                      className={`text-sm font-poppins-regular mt-1 ${
-                        isDark ? "text-gray-400" : "text-gray-600"
-                      }`}
-                    >
-                      🔁 {timer.recurring.interval}
-                    </Text>
+                    <View className="flex-row items-center mt-1">
+                      <RefreshCw
+                        size={10}
+                        color={isDark ? "#9CA3AF" : "#6B7280"}
+                      />
+                      <Text
+                        className={`text-xs font-poppins-medium ml-1 ${
+                          isDark ? "text-gray-400" : "text-gray-600"
+                        }`}
+                      >
+                        {timer.recurring.interval}
+                      </Text>
+                    </View>
                   )}
                 </View>
-                <View
-                  className={`px-3 py-1 rounded-full ${
-                    timer.status === "running"
-                      ? "bg-green-500/20"
-                      : timer.status === "paused"
-                        ? "bg-yellow-500/20"
-                        : timer.status === "completed"
-                          ? "bg-gray-100"
-                          : isDark
-                            ? "bg-gray-700"
-                            : "bg-gray-100"
-                  }`}
-                >
-                  <Text
-                    className={`text-xs font-poppins-medium ${
-                      timer.status === "running"
-                        ? "text-green-500"
-                        : timer.status === "paused"
-                          ? "text-yellow-500"
-                          : timer.status === "completed"
-                            ? "text-darkGreen"
-                            : isDark
-                              ? "text-gray-300"
-                              : "text-gray-600"
+                <View className="flex-row items-center gap-2">
+                  <View
+                    className="px-2 py-0.5 rounded-full"
+                    style={{
+                      backgroundColor: `${getStatusColor()}20`,
+                    }}
+                  >
+                    <Text
+                      className="text-xs font-poppins-bold"
+                      style={{ color: getStatusColor() }}
+                    >
+                      {timer.status.toUpperCase()}
+                    </Text>
+                  </View>
+                  <TouchableOpacity
+                    onPress={() => onDelete(timer.id)}
+                    className={`p-1.5 rounded-lg ${
+                      isDark ? "bg-gray-700" : "bg-gray-100"
                     }`}
                   >
-                    {timer.status.toUpperCase()}
-                  </Text>
+                    <Trash2 size={14} color="#EF4444" />
+                  </TouchableOpacity>
                 </View>
               </View>
-              <View className="items-center my-6">
+              <View className="items-center my-3">
+                <View className="relative items-center justify-center">
+                  <Svg
+                    width={size}
+                    height={size}
+                    style={{ position: "absolute" }}
+                  >
+                    <Circle
+                      cx={size / 2}
+                      cy={size / 2}
+                      r={radius}
+                      stroke={isDark ? "#374151" : "#E5E7EB"}
+                      strokeWidth={strokeWidth}
+                      fill="none"
+                    />
+                    <Circle
+                      cx={size / 2}
+                      cy={size / 2}
+                      r={radius}
+                      stroke={getStatusColor()}
+                      strokeWidth={strokeWidth}
+                      fill="none"
+                      strokeDasharray={circumference}
+                      strokeDashoffset={progressOffset}
+                      strokeLinecap="round"
+                      transform={`rotate(-90 ${size / 2} ${size / 2})`}
+                    />
+                  </Svg>
+                  <View
+                    className="items-center"
+                    style={{
+                      width: size,
+                      height: size,
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Text
+                      className={`text-2xl font-poppins-bold ${
+                        timer.status === "completed"
+                          ? "text-darkGreen"
+                          : isDark
+                            ? "text-white"
+                            : "text-gray-900"
+                      }`}
+                    >
+                      {formatTime(timer.remainingTime)}
+                    </Text>
+                    <View
+                      className={`h-0.5 w-8 my-1 ${
+                        isDark ? "bg-gray-600" : "bg-gray-300"
+                      }`}
+                    />
+                    <Text
+                      className={`text-xs font-poppins-medium ${
+                        isDark ? "text-gray-400" : "text-gray-500"
+                      }`}
+                    >
+                      {formatTime(timer.duration)}
+                    </Text>
+                  </View>
+                </View>
                 <Text
-                  className={`text-5xl font-poppins-bold ${
-                    timer.status === "completed"
-                      ? "text-darkGreen"
-                      : isDark
-                        ? "text-white"
-                        : "text-gray-900"
+                  className={`text-xs font-poppins-semibold mt-2 ${
+                    isDark ? "text-gray-300" : "text-gray-600"
                   }`}
                 >
-                  {formatTime(timer.remainingTime)}
-                </Text>
-                <Text
-                  className={`text-sm font-poppins-semibold mt-2 ${
-                    isDark ? "text-gray-400" : "text-gray-500"
-                  }`}
-                >
-                  of {formatTime(timer.duration)}
+                  {progress.toFixed(0)}% Complete
                 </Text>
               </View>
-              <View className="flex-row space-x-2">
-                <TouchableOpacity
-                  onPress={handlePrimaryAction}
-                  className={`flex-1 py-3 rounded-xl ${
+              <TouchableOpacity
+                onPress={handlePrimaryAction}
+                className="py-2.5 rounded-lg shadow-sm flex-row items-center justify-center"
+                style={{
+                  backgroundColor:
                     timer.status === "running"
-                      ? "bg-yellow-500"
+                      ? "#F59E0B"
                       : timer.status === "paused"
-                        ? "bg-darkGreen"
-                        : "bg-darkGreen"
-                  }`}
-                >
-                  <Text className="text-white text-center font-poppins-semibold text-base">
-                    {getButtonText()}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-              <Text
-                className={`text-lg font-poppins-semibold text-center mt-3 text-darkGreen`}
+                        ? "#2E6F40"
+                        : "#2E6F40",
+                }}
               >
+                {getButtonIcon()}
+                <Text className="text-white text-center font-poppins-bold text-sm ml-2">
+                  {getButtonText()}
+                </Text>
+              </TouchableOpacity>
+              <Text className="text-xs font-poppins-bold text-darkGreen text-center mt-2">
                 Swipe for actions • Hold to reorder
               </Text>
             </View>
