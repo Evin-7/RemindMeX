@@ -4,13 +4,13 @@
     "slug": "RemindMeX",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/icons/MainLogo.png",
     "scheme": "remindmex",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "web": {
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/icons/MainLogo.png"
     },
     "extra": {
       "router": {

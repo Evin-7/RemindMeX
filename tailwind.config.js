@@ -4,7 +4,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        brand: "#2E6F40",
+        darkGreen: "#2E6F40",
+        lightGreen: "#86efac",
+        darkGrey:"#1f2937"
       },
       backgroundImage: {
         "teal-green": "linear-gradient(to bottom right, #ffffff, #86efac)",
