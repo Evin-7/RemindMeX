@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { Timer } from "@/hooks/useTimers";
-import { View, Text, TouchableOpacity, Dimensions, Alert } from "react-native";
+import { View, Text, TouchableOpacity, Dimensions } from "react-native";
 import { useTheme } from "@/contexts/ThemeContext";
 import { calculateProgress, formatTime } from "@/utils/timerHelpers";
 import Swipeable from "react-native-gesture-handler/Swipeable";

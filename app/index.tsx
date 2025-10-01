@@ -6,6 +6,7 @@ import {
   Text,
   RefreshControl,
   Alert,
+  ScrollView,
 } from "react-native";
 import { useTimers } from "@/hooks/useTimers";
 import TimerCard from "@/components/TimerCard";
@@ -150,6 +151,7 @@ export default function Index() {
         ) : (
           <DraggableFlatList
             data={timers}
+            style={{ marginBottom: 80 }}
             keyExtractor={(item) => item.id}
             onDragEnd={({ data }) => reorderTimers(data)}
             renderItem={({ item, drag, isActive }) => (
