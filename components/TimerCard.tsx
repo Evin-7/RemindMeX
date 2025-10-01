@@ -243,7 +243,7 @@ export default function TimerCard({
                       : timer.status === "paused"
                         ? "bg-yellow-500/20"
                         : timer.status === "completed"
-                          ? "bg-blue-500/20"
+                          ? "bg-gray-100"
                           : isDark
                             ? "bg-gray-700"
                             : "bg-gray-100"
@@ -256,7 +256,7 @@ export default function TimerCard({
                         : timer.status === "paused"
                           ? "text-yellow-500"
                           : timer.status === "completed"
-                            ? "text-blue-500"
+                            ? "text-darkGreen"
                             : isDark
                               ? "text-gray-300"
                               : "text-gray-600"
@@ -270,7 +270,7 @@ export default function TimerCard({
                 <Text
                   className={`text-5xl font-poppins-bold ${
                     timer.status === "completed"
-                      ? "text-blue-500"
+                      ? "text-darkGreen"
                       : isDark
                         ? "text-white"
                         : "text-gray-900"
@@ -279,14 +279,13 @@ export default function TimerCard({
                   {formatTime(timer.remainingTime)}
                 </Text>
                 <Text
-                  className={`text-sm font-poppins-regular mt-2 ${
+                  className={`text-sm font-poppins-semibold mt-2 ${
                     isDark ? "text-gray-400" : "text-gray-500"
                   }`}
                 >
                   of {formatTime(timer.duration)}
                 </Text>
               </View>
-
               <View className="flex-row space-x-2">
                 <TouchableOpacity
                   onPress={handlePrimaryAction}
@@ -294,8 +293,8 @@ export default function TimerCard({
                     timer.status === "running"
                       ? "bg-yellow-500"
                       : timer.status === "paused"
-                        ? "bg-green-500"
-                        : "bg-blue-500"
+                        ? "bg-darkGreen"
+                        : "bg-darkGreen"
                   }`}
                 >
                   <Text className="text-white text-center font-poppins-semibold text-base">
@@ -304,9 +303,7 @@ export default function TimerCard({
                 </TouchableOpacity>
               </View>
               <Text
-                className={`text-xs text-center mt-3 ${
-                  isDark ? "text-gray-500" : "text-gray-400"
-                }`}
+                className={`text-lg font-poppins-semibold text-center mt-3 text-darkGreen`}
               >
                 Swipe for actions • Hold to reorder
               </Text>

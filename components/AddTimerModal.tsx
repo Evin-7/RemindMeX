@@ -39,19 +39,16 @@ export default function AddTimerModal({
   const handleSubmit = async () => {
     const totalSeconds =
       formData.hours * 3600 + formData.minutes * 60 + formData.seconds;
-
     if (totalSeconds <= 0) {
       alert("Please set a duration greater than 0");
       return;
     }
-
     if (formData.label!.trim() === "") {
       alert("Please enter a label for your timer");
       return;
     }
 
     try {
-      console.log("🚀 Submitting timer:", formData);
       await onAddTimer(formData);
       setFormData({
         label: "",
@@ -119,7 +116,7 @@ export default function AddTimerModal({
                 onChangeText={(text) => updateField("label", text)}
                 placeholder="e.g., Meditation, Workout, Cooking"
                 placeholderTextColor={isDark ? "#9CA3AF" : "#6B7280"}
-                className={`p-4 rounded-xl mb-4 font-poppins-regular ${
+                className={`p-4 rounded-xl mb-4 font-poppins ${
                   isDark
                     ? "bg-gray-800 text-white"
                     : "bg-gray-100 text-gray-900"
@@ -217,7 +214,7 @@ export default function AddTimerModal({
                     Recurring Timer
                   </Text>
                   <Text
-                    className={`text-xs ${
+                    className={`text-xs font-poppins ${
                       isDark ? "text-gray-400" : "text-gray-600"
                     }`}
                   >
@@ -328,11 +325,9 @@ export default function AddTimerModal({
                   </TouchableOpacity>
                 ))}
               </View>
-
-              {/* Submit Button */}
               <TouchableOpacity
                 onPress={handleSubmit}
-                className="bg-blue-500 p-4 rounded-xl mb-4"
+                className="bg-darkGreen p-4 rounded-xl mb-4"
               >
                 <Text className="text-white text-center font-poppins-semibold text-lg">
                   Create Timer

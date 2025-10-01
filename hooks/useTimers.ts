@@ -49,13 +49,11 @@ export function useTimers() {
   useEffect(() => {
     initializeTimers();
 
-    // Handle app state changes for background accuracy
     const subscription = AppState.addEventListener("change", (nextAppState) => {
       if (
         appState.current.match(/inactive|background/) &&
         nextAppState === "active"
       ) {
-        // App has come to foreground, recalculate timer states
         recalculateAllTimers();
       }
       appState.current = nextAppState;

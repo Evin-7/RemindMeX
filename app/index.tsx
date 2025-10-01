@@ -120,10 +120,8 @@ export default function Index() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View className={`flex-1 ${isDark ? "bg-gray-900" : "bg-gray-100"}`}>
         <Header />
-
         {timers.length === 0 ? (
           <View className="flex-1 items-center justify-center px-6">
-            <Text className="text-6xl mb-4">⏰</Text>
             <Text
               className={`text-2xl font-poppins-bold text-center mb-2 ${
                 isDark ? "text-white" : "text-gray-900"
@@ -132,7 +130,7 @@ export default function Index() {
               No Timers Yet
             </Text>
             <Text
-              className={`text-center font-poppins-regular ${
+              className={`text-center font-poppins ${
                 isDark ? "text-gray-400" : "text-gray-600"
               }`}
             >
@@ -182,7 +180,7 @@ export default function Index() {
         <View className="absolute bottom-6 right-6 left-6">
           <TouchableOpacity
             onPress={() => setModalVisible(true)}
-            className="bg-blue-500 p-5 rounded-2xl flex-row items-center justify-center"
+            className="bg-darkGreen p-5 rounded-2xl flex-row items-center justify-center"
             style={{
               shadowColor: "#3B82F6",
               shadowOffset: { width: 0, height: 4 },

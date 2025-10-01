@@ -1,5 +1,3 @@
-// utils/notifications.ts
-
 import * as Notifications from "expo-notifications";
 import * as Haptics from "expo-haptics";
 import { Platform } from "react-native";
@@ -41,8 +39,8 @@ export async function scheduleTimerNotification(
 
   const notificationId = await Notifications.scheduleNotificationAsync({
     content: {
-      title: "⏰ Timer Completed!",
-      body: `"${label}" has finished`,
+      title: `"${label}" completed!`,
+      body: `That’s done! Ready for your next task?`,
       sound: true,
       priority: Notifications.AndroidNotificationPriority.HIGH,
       vibrate: [0, 250, 250, 250],
@@ -79,7 +77,6 @@ export function triggerHapticFeedback(
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     }
   } else {
-    // Android (or other OS) haptics fallback
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
   }
 }
