@@ -45,12 +45,12 @@ export default function Index() {
     try {
       const { status } = await Notifications.requestPermissionsAsync();
       setPermissionStatus(status);
-      
+
       if (status !== "granted") {
         Alert.alert(
           "Notifications Disabled",
           "Please enable notifications in settings to receive timer alerts.",
-          [{ text: "OK" }]
+          [{ text: "OK" }],
         );
       }
     } catch (error) {
@@ -62,7 +62,7 @@ export default function Index() {
     const subscription = Notifications.addNotificationReceivedListener(
       (notification) => {
         console.log("Notification received:", notification);
-      }
+      },
     );
 
     return () => subscription.remove();
@@ -85,25 +85,21 @@ export default function Index() {
       Alert.alert(
         "Error",
         "Failed to create timer. Please check your input and try again.",
-        [{ text: "OK" }]
+        [{ text: "OK" }],
       );
       throw error;
     }
   };
 
   const handleDeleteTimer = (id: string, label: string) => {
-    Alert.alert(
-      "Delete Timer",
-      `Are you sure you want to delete "${label}"?`,
-      [
-        { text: "Cancel", style: "cancel" },
-        {
-          text: "Delete",
-          style: "destructive",
-          onPress: () => deleteTimer(id),
-        },
-      ]
-    );
+    Alert.alert("Delete Timer", `Are you sure you want to delete "${label}"?`, [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Delete",
+        style: "destructive",
+        onPress: () => deleteTimer(id),
+      },
+    ]);
   };
 
   if (isLoading) {

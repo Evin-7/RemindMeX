@@ -196,27 +196,20 @@ export default function TimerCard({
           activeOpacity={0.9}
         >
           <View
-            className={`rounded-2xl overflow-hidden ${
+            className={`rounded-2xl shadow-lightGreen overflow-hidden ${
               isDark ? "bg-gray-800" : "bg-white"
             }`}
-            style={{
-              shadowColor: "#000",
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.1,
-              shadowRadius: 8,
-              elevation: 4,
-            }}
           >
             <View className={`h-2 ${isDark ? "bg-gray-700" : "bg-gray-200"}`}>
               <View
                 className={`${
                   timer.status === "completed"
-                    ? "bg-blue-500"
+                    ? "bg-lightGreen"
                     : timer.status === "running"
-                    ? "bg-green-500"
-                    : timer.status === "paused"
-                    ? "bg-yellow-500"
-                    : "bg-gray-400"
+                      ? "bg-darkGreen"
+                      : timer.status === "paused"
+                        ? "bg-yellow-500"
+                        : "bg-gray-400"
                 }`}
                 style={{ width: `${progress}%`, height: "100%" }}
               />
@@ -248,12 +241,12 @@ export default function TimerCard({
                     timer.status === "running"
                       ? "bg-green-500/20"
                       : timer.status === "paused"
-                      ? "bg-yellow-500/20"
-                      : timer.status === "completed"
-                      ? "bg-blue-500/20"
-                      : isDark
-                      ? "bg-gray-700"
-                      : "bg-gray-100"
+                        ? "bg-yellow-500/20"
+                        : timer.status === "completed"
+                          ? "bg-blue-500/20"
+                          : isDark
+                            ? "bg-gray-700"
+                            : "bg-gray-100"
                   }`}
                 >
                   <Text
@@ -261,12 +254,12 @@ export default function TimerCard({
                       timer.status === "running"
                         ? "text-green-500"
                         : timer.status === "paused"
-                        ? "text-yellow-500"
-                        : timer.status === "completed"
-                        ? "text-blue-500"
-                        : isDark
-                        ? "text-gray-300"
-                        : "text-gray-600"
+                          ? "text-yellow-500"
+                          : timer.status === "completed"
+                            ? "text-blue-500"
+                            : isDark
+                              ? "text-gray-300"
+                              : "text-gray-600"
                     }`}
                   >
                     {timer.status.toUpperCase()}
@@ -279,8 +272,8 @@ export default function TimerCard({
                     timer.status === "completed"
                       ? "text-blue-500"
                       : isDark
-                      ? "text-white"
-                      : "text-gray-900"
+                        ? "text-white"
+                        : "text-gray-900"
                   }`}
                 >
                   {formatTime(timer.remainingTime)}
@@ -301,8 +294,8 @@ export default function TimerCard({
                     timer.status === "running"
                       ? "bg-yellow-500"
                       : timer.status === "paused"
-                      ? "bg-green-500"
-                      : "bg-blue-500"
+                        ? "bg-green-500"
+                        : "bg-blue-500"
                   }`}
                 >
                   <Text className="text-white text-center font-poppins-semibold text-base">

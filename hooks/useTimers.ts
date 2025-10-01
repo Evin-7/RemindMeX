@@ -86,7 +86,7 @@ export function useTimers() {
       prevTimers.map((timer) => ({
         ...timer,
         remainingTime: recalculateRemainingTime(timer),
-      }))
+      })),
     );
   }, []);
 
@@ -112,7 +112,7 @@ export function useTimers() {
 
         if (newRemainingTime === 0 && timer.remainingTime > 0) {
           triggerHapticFeedback("heavy");
-          
+
           // Handle recurring timers
           if (timer.recurring?.enabled) {
             return {
@@ -142,53 +142,50 @@ export function useTimers() {
     });
   }, [debouncedSave]);
 
-  const addTimer = useCallback(
-    async (formData: TimerFormData) => {
-      try {
-        const totalSeconds =
-          formData.hours * 3600 + formData.minutes * 60 + formData.seconds;
+  const addTimer = useCallback(async (formData: TimerFormData) => {
+    try {
+      const totalSeconds =
+        formData.hours * 3600 + formData.minutes * 60 + formData.seconds;
 
-        if (totalSeconds === 0) {
-          throw new Error("Timer duration must be greater than 0");
-        }
-
-        if (totalSeconds > 86400) {
-          // 24 hours
-          throw new Error("Timer duration cannot exceed 24 hours");
-        }
-
-        const newTimer: Timer = {
-          id: generateTimerId(),
-          label: formData.label?.trim() || "Untitled Timer",
-          duration: totalSeconds,
-          remainingTime: totalSeconds,
-          status: "idle",
-          createdAt: Date.now(),
-          recurring: formData.recurring
-            ? {
-                enabled: true,
-                interval: formData.recurringInterval || "daily",
-              }
-            : undefined,
-        };
-
-        setTimers((prev) => {
-          const updated = [newTimer, ...prev];
-          saveTimers(updated).catch((error) => {
-            console.error("Failed to save new timer:", error);
-          });
-          return updated;
-        });
-
-        triggerHapticFeedback("light");
-        return newTimer;
-      } catch (error) {
-        console.error("Error adding timer:", error);
-        throw error;
+      if (totalSeconds === 0) {
+        throw new Error("Timer duration must be greater than 0");
       }
-    },
-    []
-  );
+
+      if (totalSeconds > 86400) {
+        // 24 hours
+        throw new Error("Timer duration cannot exceed 24 hours");
+      }
+
+      const newTimer: Timer = {
+        id: generateTimerId(),
+        label: formData.label?.trim() || "Untitled Timer",
+        duration: totalSeconds,
+        remainingTime: totalSeconds,
+        status: "idle",
+        createdAt: Date.now(),
+        recurring: formData.recurring
+          ? {
+              enabled: true,
+              interval: formData.recurringInterval || "daily",
+            }
+          : undefined,
+      };
+
+      setTimers((prev) => {
+        const updated = [newTimer, ...prev];
+        saveTimers(updated).catch((error) => {
+          console.error("Failed to save new timer:", error);
+        });
+        return updated;
+      });
+
+      triggerHapticFeedback("light");
+      return newTimer;
+    } catch (error) {
+      console.error("Error adding timer:", error);
+      throw error;
+    }
+  }, []);
 
   const startTimer = useCallback(async (timerId: string) => {
     try {
@@ -205,7 +202,7 @@ export function useTimers() {
               const notificationId = await scheduleTimerNotification(
                 t.id,
                 t.label,
-                t.remainingTime
+                t.remainingTime,
               );
 
               setTimers((current) =>
@@ -217,8 +214,8 @@ export function useTimers() {
                         startedAt: Date.now(),
                         notificationId,
                       }
-                    : ct
-                )
+                    : ct,
+                ),
               );
             } catch (error) {
               console.error("Failed to schedule notification:", error);
@@ -233,7 +230,7 @@ export function useTimers() {
             status: "running" as const,
             startedAt: Date.now(),
           };
-        })
+        }),
       );
 
       setTimeout(() => {
@@ -271,7 +268,7 @@ export function useTimers() {
 
           triggerHapticFeedback("light");
           return updatedTimer;
-        })
+        }),
       );
 
       setTimeout(() => {
@@ -292,7 +289,7 @@ export function useTimers() {
     async (timerId: string) => {
       await startTimer(timerId);
     },
-    [startTimer]
+    [startTimer],
   );
 
   const resetTimer = useCallback(async (timerId: string) => {
@@ -319,7 +316,7 @@ export function useTimers() {
 
           triggerHapticFeedback("light");
           return updatedTimer;
-        })
+        }),
       );
 
       setTimeout(() => {
@@ -359,7 +356,7 @@ export function useTimers() {
         throw error;
       }
     },
-    [timers]
+    [timers],
   );
 
   const reorderTimers = useCallback((newOrder: Timer[]) => {

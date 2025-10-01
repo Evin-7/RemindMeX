@@ -6,7 +6,7 @@ module.exports = {
       colors: {
         darkGreen: "#2E6F40",
         lightGreen: "#86efac",
-        darkGrey:"#1f2937"
+        darkGrey: "#1f2937",
       },
       backgroundImage: {
         "teal-green": "linear-gradient(to bottom right, #ffffff, #86efac)",
