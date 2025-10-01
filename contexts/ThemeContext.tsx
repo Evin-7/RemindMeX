@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useColorScheme as useSystemColorScheme } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { saveTheme, loadTheme } from "@/utils/storage";
 
 type Theme = "light" | "dark" | "system";
 
@@ -17,27 +17,19 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setThemeState] = useState<Theme>("system");
 
   useEffect(() => {
-    loadTheme();
+    initializeTheme();
   }, []);
 
-  const loadTheme = async () => {
-    try {
-      const savedTheme = await AsyncStorage.getItem("theme");
-      if (savedTheme) {
-        setThemeState(savedTheme as Theme);
-      }
-    } catch (error) {
-      console.error("Failed to load theme:", error);
+  const initializeTheme = async () => {
+    const savedTheme = await loadTheme();
+    if (savedTheme) {
+      setThemeState(savedTheme as Theme);
     }
   };
 
   const setTheme = async (newTheme: Theme) => {
-    try {
-      await AsyncStorage.setItem("theme", newTheme);
-      setThemeState(newTheme);
-    } catch (error) {
-      console.error("Failed to save theme:", error);
-    }
+    await saveTheme(newTheme);
+    setThemeState(newTheme);
   };
 
   const effectiveTheme =

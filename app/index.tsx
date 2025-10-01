@@ -1,106 +1,142 @@
 import "../global.css";
-import { View, Text, TouchableOpacity, ScrollView } from "react-native";
-import { useTheme } from "@/contexts/ThemeContext";
+import { useEffect, useState } from "react";
+import {
+  View,
+  FlatList,
+  TouchableOpacity,
+  Text,
+  RefreshControl,
+} from "react-native";
+import { useTimers } from "@/hooks/useTimers";
+import TimerCard from "@/components/TimerCard";
+import AddTimerModal from "@/components/AddTimerModal";
 import Header from "@/components/Header";
+import { useTheme } from "@/contexts/ThemeContext";
+import * as Notifications from "expo-notifications";
 
 export default function Index() {
-  const { theme, effectiveTheme, setTheme } = useTheme();
+  const {
+    timers,
+    tick,
+    isLoading,
+    addTimer,
+    startTimer,
+    pauseTimer,
+    resumeTimer,
+    resetTimer,
+    deleteTimer,
+  } = useTimers();
+  const { effectiveTheme } = useTheme();
   const isDark = effectiveTheme === "dark";
+  const [modalVisible, setModalVisible] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+
+  useEffect(() => {
+    Notifications.requestPermissionsAsync();
+
+    const subscription = Notifications.addNotificationReceivedListener(
+      (notification) => {
+        console.log("Notification received:", notification);
+      },
+    );
+
+    return () => subscription.remove();
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => tick(), 1000);
+    return () => clearInterval(interval);
+  }, [tick]);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    setTimeout(() => setRefreshing(false), 1000);
+  };
+
+  if (isLoading) {
+    return (
+      <View
+        className={`flex-1 items-center justify-center ${isDark ? "bg-gray-900" : "bg-gray-100"}`}
+      >
+        <Text
+          className={`text-lg font-poppins-medium ${isDark ? "text-white" : "text-gray-900"}`}
+        >
+          Loading timers...
+        </Text>
+      </View>
+    );
+  }
 
   return (
     <View className={`flex-1 ${isDark ? "bg-gray-900" : "bg-gray-100"}`}>
       <Header />
 
-      <ScrollView contentContainerStyle={{ padding: 16 }}>
-        <View className="items-center justify-center mt-10">
+      {timers.length === 0 ? (
+        <View className="flex-1 items-center justify-center px-6">
+          <Text className={`text-6xl mb-4`}>⏰</Text>
           <Text
-            className={`text-xl font-poppins-semibold mb-8 ${
+            className={`text-2xl font-poppins-bold text-center mb-2 ${
               isDark ? "text-white" : "text-gray-900"
             }`}
           >
-            Choose Theme
+            No Timers Yet
           </Text>
-
-          <View className="w-full max-w-xs space-y-3">
-            <TouchableOpacity
-              onPress={() => setTheme("light")}
-              className={`p-4 rounded-lg border-2 ${
-                theme === "light"
-                  ? "bg-blue-500 border-blue-500"
-                  : isDark
-                    ? "bg-gray-800 border-gray-700"
-                    : "bg-white border-gray-300"
-              }`}
-            >
-              <Text
-                className={`text-center font-poppins-semibold text-lg ${
-                  theme === "light"
-                    ? "text-white"
-                    : isDark
-                      ? "text-gray-200"
-                      : "text-gray-900"
-                }`}
-              >
-                ☀️ Light Mode
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => setTheme("dark")}
-              className={`p-4 rounded-lg border-2 mt-3 ${
-                theme === "dark"
-                  ? "bg-blue-500 border-blue-500"
-                  : isDark
-                    ? "bg-gray-800 border-gray-700"
-                    : "bg-white border-gray-300"
-              }`}
-            >
-              <Text
-                className={`text-center font-poppins-semibold text-lg ${
-                  theme === "dark"
-                    ? "text-white"
-                    : isDark
-                      ? "text-gray-200"
-                      : "text-gray-900"
-                }`}
-              >
-                🌙 Dark Mode
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => setTheme("system")}
-              className={`p-4 rounded-lg border-2 mt-3 ${
-                theme === "system"
-                  ? "bg-blue-500 border-blue-500"
-                  : isDark
-                    ? "bg-gray-800 border-gray-700"
-                    : "bg-white border-gray-300"
-              }`}
-            >
-              <Text
-                className={`text-center font-poppins-semibold text-lg ${
-                  theme === "system"
-                    ? "text-white"
-                    : isDark
-                      ? "text-gray-200"
-                      : "text-gray-900"
-                }`}
-              >
-                📱 System Default
-              </Text>
-            </TouchableOpacity>
-          </View>
-
           <Text
-            className={`mt-8 font-poppins-medium ${
+            className={`text-center font-poppins-regular ${
               isDark ? "text-gray-400" : "text-gray-600"
             }`}
           >
-            Current: {effectiveTheme === "dark" ? "Dark" : "Light"}
+            Create your first timer to get started
           </Text>
         </View>
-      </ScrollView>
+      ) : (
+        <FlatList
+          data={timers}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <TimerCard
+              timer={item}
+              onStart={startTimer}
+              onPause={pauseTimer}
+              onResume={resumeTimer}
+              onReset={resetTimer}
+              onDelete={deleteTimer}
+            />
+          )}
+          contentContainerStyle={{ padding: 16 }}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              tintColor={isDark ? "#fff" : "#000"}
+            />
+          }
+        />
+      )}
+
+      <View className="absolute bottom-6 right-6 left-6">
+        <TouchableOpacity
+          onPress={() => setModalVisible(true)}
+          className="bg-blue-500 p-5 rounded-2xl flex-row items-center justify-center"
+          style={{
+            shadowColor: "#3B82F6",
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.3,
+            shadowRadius: 8,
+            elevation: 8,
+          }}
+        >
+          <Text className="text-white text-center font-poppins-bold text-lg">
+            + Add Timer
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      <AddTimerModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        onAddTimer={addTimer}
+      />
     </View>
   );
 }
