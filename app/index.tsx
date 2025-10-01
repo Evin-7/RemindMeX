@@ -5,7 +5,6 @@ import {
   TouchableOpacity,
   Text,
   RefreshControl,
-  Alert,
   ScrollView,
 } from "react-native";
 import { useTimers } from "@/hooks/useTimers";
@@ -18,6 +17,9 @@ import DraggableFlatList, {
   ScaleDecorator,
 } from "react-native-draggable-flatlist";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import MessageModal from "@/components/MessageModal";
+// ✅ New Icon Import
+import { Clock } from "lucide-react-native";
 
 export default function Index() {
   const {
@@ -38,6 +40,26 @@ export default function Index() {
   const [refreshing, setRefreshing] = useState(false);
   const [permissionStatus, setPermissionStatus] = useState<string | null>(null);
 
+  const [message, setMessage] = useState<{
+    visible: boolean;
+    title: string;
+    message: string;
+    type?: "success" | "error";
+  }>({
+    visible: false,
+    title: "",
+    message: "",
+    type: "success",
+  });
+
+  const showMessage = (
+    title: string,
+    msg: string,
+    type: "success" | "error"
+  ) => {
+    setMessage({ visible: true, title, message: msg, type });
+  };
+
   useEffect(() => {
     requestNotificationPermissions();
   }, []);
@@ -48,22 +70,50 @@ export default function Index() {
       setPermissionStatus(status);
 
       if (status !== "granted") {
-        Alert.alert(
+        showMessage(
           "Notifications Disabled",
           "Please enable notifications in settings to receive timer alerts.",
-          [{ text: "OK" }],
+          "error"
         );
       }
     } catch (error) {
       console.error("Failed to request notification permissions:", error);
+      showMessage(
+        "Error",
+        "Failed to request notification permissions",
+        "error"
+      );
     }
+  };
+
+  const [timerIdToDelete, setTimerIdToDelete] = useState<string | null>(null);
+  const confirmDelete = () => {
+    if (timerIdToDelete) {
+      deleteTimer(timerIdToDelete);
+      showMessage("Deleted", "Timer successfully removed.", "success");
+    }
+    cancelDelete();
+  };
+
+  const handleDeleteTimer = (id: string, label: string) => {
+    setTimerIdToDelete(id);
+    setMessage({
+      visible: true,
+      title: "Confirm Deletion",
+      message: `Are you sure you want to delete "${label}"?`,
+      type: "error",
+    });
+  };
+  const cancelDelete = () => {
+    setTimerIdToDelete(null);
+    setMessage({ ...message, visible: false });
   };
 
   useEffect(() => {
     const subscription = Notifications.addNotificationReceivedListener(
       (notification) => {
         console.log("Notification received:", notification);
-      },
+      }
     );
 
     return () => subscription.remove();
@@ -82,34 +132,27 @@ export default function Index() {
   const handleAddTimer = async (formData: any) => {
     try {
       await addTimer(formData);
+      showMessage("Success", "Timer created successfully!", "success");
     } catch (error) {
-      Alert.alert(
+      showMessage(
         "Error",
         "Failed to create timer. Please check your input and try again.",
-        [{ text: "OK" }],
+        "error"
       );
-      throw error;
     }
-  };
-
-  const handleDeleteTimer = (id: string, label: string) => {
-    Alert.alert("Delete Timer", `Are you sure you want to delete "${label}"?`, [
-      { text: "Cancel", style: "cancel" },
-      {
-        text: "Delete",
-        style: "destructive",
-        onPress: () => deleteTimer(id),
-      },
-    ]);
   };
 
   if (isLoading) {
     return (
       <View
-        className={`flex-1 items-center justify-center ${isDark ? "bg-gray-900" : "bg-gray-100"}`}
+        className={`flex-1 items-center justify-center ${
+          isDark ? "bg-gray-900" : "bg-gray-100"
+        }`}
       >
         <Text
-          className={`text-lg font-poppins-medium ${isDark ? "text-white" : "text-gray-900"}`}
+          className={`text-lg font-poppins-medium ${
+            isDark ? "text-white" : "text-gray-900"
+          }`}
         >
           Loading timers...
         </Text>
@@ -121,8 +164,14 @@ export default function Index() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View className={`flex-1 ${isDark ? "bg-gray-900" : "bg-gray-100"}`}>
         <Header />
+
         {timers.length === 0 ? (
           <View className="flex-1 items-center justify-center px-6">
+            <Clock
+              size={60}
+              color={isDark ? "#D1D5DB" : "#4B5563"}
+              className="mb-4"
+            />
             <Text
               className={`text-2xl font-poppins-bold text-center mb-2 ${
                 isDark ? "text-white" : "text-gray-900"
@@ -151,7 +200,7 @@ export default function Index() {
         ) : (
           <DraggableFlatList
             data={timers}
-            style={{ marginBottom: 80 }}
+            style={{ marginBottom: 100 }}
             keyExtractor={(item) => item.id}
             onDragEnd={({ data }) => reorderTimers(data)}
             renderItem={({ item, drag, isActive }) => (
@@ -201,6 +250,16 @@ export default function Index() {
           visible={modalVisible}
           onClose={() => setModalVisible(false)}
           onAddTimer={handleAddTimer}
+        />
+
+        <MessageModal
+          visible={message.visible}
+          onClose={cancelDelete}
+          title={message.title}
+          message={message.message}
+          type={message.type}
+          isConfirmation={timerIdToDelete !== null}
+          onConfirm={confirmDelete}
         />
       </View>
     </GestureHandlerRootView>
