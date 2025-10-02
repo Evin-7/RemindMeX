@@ -9,6 +9,7 @@ interface MessageModalProps {
   title: string;
   message: string;
   type?: "success" | "error";
+  // ✅ New props for confirmation
   isConfirmation?: boolean;
   onConfirm?: () => void;
 }
@@ -19,8 +20,9 @@ export default function MessageModal({
   title,
   message,
   type = "success",
+  // ✅ Destructure new props
   isConfirmation = false,
-  onConfirm = onClose,
+  onConfirm = onClose, // Default to onClose for standard use
 }: MessageModalProps) {
   const { effectiveTheme } = useTheme();
   const isDark = effectiveTheme === "dark";
@@ -31,6 +33,7 @@ export default function MessageModal({
     return isDark ? "#E5E7EB" : "#1F2937";
   };
 
+  // Determine which function the main button should call
   const buttonAction = isConfirmation ? onConfirm : onClose;
 
   return (
@@ -46,6 +49,7 @@ export default function MessageModal({
             isDark ? "bg-gray-900" : "bg-white"
           }`}
         >
+          {/* Header Row for Title and Close Button */}
           <View className="flex-row justify-between items-center mb-2">
             <Text
               className={`text-xl font-poppins-bold ${
@@ -60,7 +64,12 @@ export default function MessageModal({
             >
               {title}
             </Text>
-            <TouchableOpacity onPress={onClose} className="p-1 rounded-full">
+
+            {/* Close Icon Button - ALWAYS calls onClose (cancelDelete in Index.js) */}
+            <TouchableOpacity
+              onPress={onClose} // This is the fix for the 'X' button
+              className="p-1 rounded-full"
+            >
               <X size={24} color={getIconColor()} />
             </TouchableOpacity>
           </View>
@@ -72,8 +81,10 @@ export default function MessageModal({
           >
             {message}
           </Text>
+
+          {/* Main Action Button */}
           <TouchableOpacity
-            onPress={buttonAction}
+            onPress={buttonAction} // Use the determined action (confirm or close)
             className={`p-3 rounded-xl ${
               type === "success"
                 ? "bg-darkGreen"
@@ -83,6 +94,7 @@ export default function MessageModal({
             }`}
           >
             <Text className="text-white text-center font-poppins-semibold">
+              {/* Change button text for confirmation */}
               {isConfirmation ? "DELETE" : "OK"}
             </Text>
           </TouchableOpacity>
