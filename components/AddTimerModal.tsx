@@ -120,8 +120,7 @@ export default function AddTimerModal({
         >
           <View className="flex-1 justify-end bg-black/50">
             <View
-              className={`rounded-t-3xl p-6 ${isDark ? "bg-gray-900" : "bg-white"}`}
-              style={{ maxHeight: "90%" }}
+              className={`rounded-t-3xl p-6 max-h-[90%] ${isDark ? "bg-gray-900" : "bg-white"}`}
             >
               <ScrollView showsVerticalScrollIndicator={false}>
                 <View className="flex-row justify-between items-center mb-6">

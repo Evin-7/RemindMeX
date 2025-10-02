@@ -1,12 +1,6 @@
 import "../global.css";
 import { useEffect, useState } from "react";
-import {
-  View,
-  TouchableOpacity,
-  Text,
-  RefreshControl,
-  ScrollView,
-} from "react-native";
+import { View, TouchableOpacity, Text, RefreshControl } from "react-native";
 import { useTimers } from "@/hooks/useTimers";
 import TimerCard from "@/components/TimerCard";
 import AddTimerModal from "@/components/AddTimerModal";
@@ -18,7 +12,6 @@ import DraggableFlatList, {
 } from "react-native-draggable-flatlist";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import MessageModal from "@/components/MessageModal";
-// ✅ New Icon Import
 import { Clock } from "lucide-react-native";
 
 export default function Index() {
@@ -55,7 +48,7 @@ export default function Index() {
   const showMessage = (
     title: string,
     msg: string,
-    type: "success" | "error"
+    type: "success" | "error",
   ) => {
     setMessage({ visible: true, title, message: msg, type });
   };
@@ -73,7 +66,7 @@ export default function Index() {
         showMessage(
           "Notifications Disabled",
           "Please enable notifications in settings to receive timer alerts.",
-          "error"
+          "error",
         );
       }
     } catch (error) {
@@ -81,7 +74,7 @@ export default function Index() {
       showMessage(
         "Error",
         "Failed to request notification permissions",
-        "error"
+        "error",
       );
     }
   };
@@ -113,7 +106,7 @@ export default function Index() {
     const subscription = Notifications.addNotificationReceivedListener(
       (notification) => {
         console.log("Notification received:", notification);
-      }
+      },
     );
 
     return () => subscription.remove();
@@ -137,7 +130,7 @@ export default function Index() {
       showMessage(
         "Error",
         "Failed to create timer. Please check your input and try again.",
-        "error"
+        "error",
       );
     }
   };
@@ -161,10 +154,9 @@ export default function Index() {
   }
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    <GestureHandlerRootView className="flex-1">
       <View className={`flex-1 ${isDark ? "bg-gray-900" : "bg-gray-100"}`}>
         <Header />
-
         {timers.length === 0 ? (
           <View className="flex-1 items-center justify-center px-6">
             <Clock
@@ -200,7 +192,7 @@ export default function Index() {
         ) : (
           <DraggableFlatList
             data={timers}
-            style={{ marginBottom: 100 }}
+            className="mb-[100px] p-4 "
             keyExtractor={(item) => item.id}
             onDragEnd={({ data }) => reorderTimers(data)}
             renderItem={({ item, drag, isActive }) => (
@@ -217,7 +209,6 @@ export default function Index() {
                 />
               </ScaleDecorator>
             )}
-            contentContainerStyle={{ padding: 16, paddingBottom: 100 }}
             refreshControl={
               <RefreshControl
                 refreshing={refreshing}
@@ -231,14 +222,8 @@ export default function Index() {
         <View className="absolute bottom-6 right-6 left-6">
           <TouchableOpacity
             onPress={() => setModalVisible(true)}
-            className="bg-darkGreen p-5 rounded-2xl flex-row items-center justify-center"
-            style={{
-              shadowColor: "#3B82F6",
-              shadowOffset: { width: 0, height: 4 },
-              shadowOpacity: 0.3,
-              shadowRadius: 8,
-              elevation: 8,
-            }}
+            className="bg-darkGreen p-5 rounded-2xl flex-row items-center justify-center 
+             shadow-lg shadow-blue-500/60"
           >
             <Text className="text-white text-center font-poppins-bold text-lg">
               + Add Timer
