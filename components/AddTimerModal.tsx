@@ -133,7 +133,7 @@ export default function AddTimerModal({
                     Create Timer
                   </Text>
                   <TouchableOpacity onPress={onClose}>
-                    <Text className="text-2xl text-gray-500">✕</Text>
+                    <Text className="text-2xl text-[#FF0000]">✕</Text>
                   </TouchableOpacity>
                 </View>
 

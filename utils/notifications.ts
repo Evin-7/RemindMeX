@@ -46,7 +46,7 @@ export async function scheduleTimerNotification(
       vibrate: [0, 250, 250, 250],
       data: { timerId },
     },
-    trigger: triggerDate as unknown as Notifications.NotificationTriggerInput,
+    trigger: { type: "date", date: triggerDate } as any,
   });
 
   return notificationId;

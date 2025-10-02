@@ -1,25 +1,19 @@
 import "../global.css";
 import { useEffect, useState } from "react";
-import {
-  View,
-  TouchableOpacity,
-  Text,
-  RefreshControl,
-  ScrollView,
-} from "react-native";
+import { View } from "react-native";
 import { useTimers } from "@/hooks/useTimers";
-import TimerCard from "@/components/TimerCard";
 import AddTimerModal from "@/components/AddTimerModal";
 import Header from "@/components/Header";
 import { useTheme } from "@/contexts/ThemeContext";
-import * as Notifications from "expo-notifications";
-import DraggableFlatList, {
-  ScaleDecorator,
-} from "react-native-draggable-flatlist";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import MessageModal from "@/components/MessageModal";
-// ✅ New Icon Import
-import { Clock } from "lucide-react-native";
+import EmptyState from "@/components/EmptyState";
+import LoadingScreen from "@/components/LoadingScreen";
+import AddTimerButton from "@/components/AddTimerButton";
+import TimerList from "@/components/TimerList";
+import { useNotificationPermissions } from "@/hooks/useNotificationPermissions";
+import { useTimerDeletion } from "@/hooks/useTimerDeletion";
+import { useNotificationListener } from "@/hooks/useNotificationListener";
 
 export default function Index() {
   const {
@@ -38,7 +32,6 @@ export default function Index() {
   const isDark = effectiveTheme === "dark";
   const [modalVisible, setModalVisible] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-  const [permissionStatus, setPermissionStatus] = useState<string | null>(null);
 
   const [message, setMessage] = useState<{
     visible: boolean;
@@ -55,69 +48,18 @@ export default function Index() {
   const showMessage = (
     title: string,
     msg: string,
-    type: "success" | "error"
+    type: "success" | "error",
   ) => {
     setMessage({ visible: true, title, message: msg, type });
   };
 
-  useEffect(() => {
-    requestNotificationPermissions();
-  }, []);
+  const { permissionStatus, requestNotificationPermissions } =
+    useNotificationPermissions(showMessage);
 
-  const requestNotificationPermissions = async () => {
-    try {
-      const { status } = await Notifications.requestPermissionsAsync();
-      setPermissionStatus(status);
+  const { timerIdToDelete, handleDeleteTimer, confirmDelete, cancelDelete } =
+    useTimerDeletion(deleteTimer, showMessage);
 
-      if (status !== "granted") {
-        showMessage(
-          "Notifications Disabled",
-          "Please enable notifications in settings to receive timer alerts.",
-          "error"
-        );
-      }
-    } catch (error) {
-      console.error("Failed to request notification permissions:", error);
-      showMessage(
-        "Error",
-        "Failed to request notification permissions",
-        "error"
-      );
-    }
-  };
-
-  const [timerIdToDelete, setTimerIdToDelete] = useState<string | null>(null);
-  const confirmDelete = () => {
-    if (timerIdToDelete) {
-      deleteTimer(timerIdToDelete);
-      showMessage("Deleted", "Timer successfully removed.", "success");
-    }
-    cancelDelete();
-  };
-
-  const handleDeleteTimer = (id: string, label: string) => {
-    setTimerIdToDelete(id);
-    setMessage({
-      visible: true,
-      title: "Confirm Deletion",
-      message: `Are you sure you want to delete "${label}"?`,
-      type: "error",
-    });
-  };
-  const cancelDelete = () => {
-    setTimerIdToDelete(null);
-    setMessage({ ...message, visible: false });
-  };
-
-  useEffect(() => {
-    const subscription = Notifications.addNotificationReceivedListener(
-      (notification) => {
-        console.log("Notification received:", notification);
-      }
-    );
-
-    return () => subscription.remove();
-  }, []);
+  useNotificationListener();
 
   useEffect(() => {
     const interval = setInterval(() => tick(), 1000);
@@ -137,121 +79,50 @@ export default function Index() {
       showMessage(
         "Error",
         "Failed to create timer. Please check your input and try again.",
-        "error"
+        "error",
       );
     }
   };
 
+  const onDeleteTimer = (id: string, label: string) => {
+    const deleteMessage = handleDeleteTimer(id, label);
+    setMessage({ visible: true, ...deleteMessage });
+  };
+
   if (isLoading) {
-    return (
-      <View
-        className={`flex-1 items-center justify-center ${
-          isDark ? "bg-gray-900" : "bg-gray-100"
-        }`}
-      >
-        <Text
-          className={`text-lg font-poppins-medium ${
-            isDark ? "text-white" : "text-gray-900"
-          }`}
-        >
-          Loading timers...
-        </Text>
-      </View>
-    );
+    return <LoadingScreen isDark={isDark} />;
   }
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View className={`flex-1 ${isDark ? "bg-gray-900" : "bg-gray-100"}`}>
         <Header />
-
         {timers.length === 0 ? (
-          <View className="flex-1 items-center justify-center px-6">
-            <Clock
-              size={60}
-              color={isDark ? "#D1D5DB" : "#4B5563"}
-              className="mb-4"
-            />
-            <Text
-              className={`text-2xl font-poppins-bold text-center mb-2 ${
-                isDark ? "text-white" : "text-gray-900"
-              }`}
-            >
-              No Timers Yet
-            </Text>
-            <Text
-              className={`text-center font-poppins ${
-                isDark ? "text-gray-400" : "text-gray-600"
-              }`}
-            >
-              Create your first timer to get started
-            </Text>
-            {permissionStatus !== "granted" && (
-              <TouchableOpacity
-                onPress={requestNotificationPermissions}
-                className="mt-4 px-4 py-2 bg-yellow-500 rounded-lg"
-              >
-                <Text className="text-white font-poppins-medium">
-                  Enable Notifications
-                </Text>
-              </TouchableOpacity>
-            )}
-          </View>
+          <EmptyState
+            isDark={isDark}
+            permissionStatus={permissionStatus}
+            onRequestPermissions={requestNotificationPermissions}
+          />
         ) : (
-          <DraggableFlatList
-            data={timers}
-            style={{ marginBottom: 100 }}
-            keyExtractor={(item) => item.id}
-            onDragEnd={({ data }) => reorderTimers(data)}
-            renderItem={({ item, drag, isActive }) => (
-              <ScaleDecorator>
-                <TimerCard
-                  timer={item}
-                  onStart={startTimer}
-                  onPause={pauseTimer}
-                  onResume={resumeTimer}
-                  onReset={resetTimer}
-                  onDelete={() => handleDeleteTimer(item.id, item.label)}
-                  onLongPress={drag}
-                  isActive={isActive}
-                />
-              </ScaleDecorator>
-            )}
-            contentContainerStyle={{ padding: 16, paddingBottom: 100 }}
-            refreshControl={
-              <RefreshControl
-                refreshing={refreshing}
-                onRefresh={onRefresh}
-                tintColor={isDark ? "#fff" : "#000"}
-              />
-            }
+          <TimerList
+            timers={timers}
+            isDark={isDark}
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            onReorder={reorderTimers}
+            onStart={startTimer}
+            onPause={pauseTimer}
+            onResume={resumeTimer}
+            onReset={resetTimer}
+            onDelete={onDeleteTimer}
           />
         )}
-
-        <View className="absolute bottom-6 right-6 left-6">
-          <TouchableOpacity
-            onPress={() => setModalVisible(true)}
-            className="bg-darkGreen p-5 rounded-2xl flex-row items-center justify-center"
-            style={{
-              shadowColor: "#3B82F6",
-              shadowOffset: { width: 0, height: 4 },
-              shadowOpacity: 0.3,
-              shadowRadius: 8,
-              elevation: 8,
-            }}
-          >
-            <Text className="text-white text-center font-poppins-bold text-lg">
-              + Add Timer
-            </Text>
-          </TouchableOpacity>
-        </View>
-
+        <AddTimerButton onPress={() => setModalVisible(true)} />
         <AddTimerModal
           visible={modalVisible}
           onClose={() => setModalVisible(false)}
           onAddTimer={handleAddTimer}
         />
-
         <MessageModal
           visible={message.visible}
           onClose={cancelDelete}

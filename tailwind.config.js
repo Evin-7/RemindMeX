@@ -16,8 +16,6 @@ module.exports = {
         "poppins-medium": ["Poppins_500Medium", "sans-serif"],
         "poppins-semibold": ["Poppins_600SemiBold", "sans-serif"],
         "poppins-bold": ["Poppins_700Bold", "sans-serif"],
-
-        // Italics
         "poppins-italic": ["Poppins_400Regular_Italic", "sans-serif"],
         "poppins-medium-italic": ["Poppins_500Medium_Italic", "sans-serif"],
         "poppins-semibold-italic": ["Poppins_600SemiBold_Italic", "sans-serif"],

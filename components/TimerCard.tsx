@@ -144,7 +144,7 @@ export default function TimerCard({
           swipeableRef.current?.close();
         }}
         style={{
-          backgroundColor: "#EF4444",
+          backgroundColor: "#FF0000",
           justifyContent: "center",
           alignItems: "center",
           width: 70,
@@ -288,7 +288,7 @@ export default function TimerCard({
                       isDark ? "bg-gray-700" : "bg-gray-100"
                     }`}
                   >
-                    <Trash2 size={14} color="#EF4444" />
+                    <Trash2 size={14} color="#FF0000" />
                   </TouchableOpacity>
                 </View>
               </View>
