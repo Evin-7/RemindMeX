@@ -8,6 +8,7 @@ import { useTheme } from "@/contexts/ThemeContext";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import MessageModal from "@/components/MessageModal";
 import EmptyState from "@/components/EmptyState";
+import { SafeAreaView } from "react-native-safe-area-context";
 import LoadingScreen from "@/components/LoadingScreen";
 import AddTimerButton from "@/components/AddTimerButton";
 import TimerList from "@/components/TimerList";
@@ -98,44 +99,46 @@ export default function Index() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <View className={`flex-1 ${isDark ? "bg-gray-900" : "bg-gray-100"}`}>
-        <Header />
-        {timers.length === 0 ? (
-          <EmptyState
-            isDark={isDark}
-            permissionStatus={permissionStatus}
-            onRequestPermissions={requestNotificationPermissions}
+      <SafeAreaView style={{ flex: 1 }} edges={["bottom", "left", "right"]}>
+        <View className={`flex-1 ${isDark ? "bg-gray-900" : "bg-gray-100"}`}>
+          <Header />
+          {timers.length === 0 ? (
+            <EmptyState
+              isDark={isDark}
+              permissionStatus={permissionStatus}
+              onRequestPermissions={requestNotificationPermissions}
+            />
+          ) : (
+            <TimerList
+              timers={timers}
+              isDark={isDark}
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              onReorder={reorderTimers}
+              onStart={startTimer}
+              onPause={pauseTimer}
+              onResume={resumeTimer}
+              onReset={resetTimer}
+              onDelete={onDeleteTimer}
+            />
+          )}
+          <AddTimerButton onPress={() => setModalVisible(true)} />
+          <AddTimerModal
+            visible={modalVisible}
+            onClose={() => setModalVisible(false)}
+            onAddTimer={handleAddTimer}
           />
-        ) : (
-          <TimerList
-            timers={timers}
-            isDark={isDark}
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-            onReorder={reorderTimers}
-            onStart={startTimer}
-            onPause={pauseTimer}
-            onResume={resumeTimer}
-            onReset={resetTimer}
-            onDelete={onDeleteTimer}
+          <MessageModal
+            visible={message.visible}
+            onClose={timerIdToDelete ? cancelDelete : hideMessage}
+            title={message.title}
+            message={message.message}
+            type={message.type}
+            isConfirmation={timerIdToDelete !== null}
+            onConfirm={confirmDelete}
           />
-        )}
-        <AddTimerButton onPress={() => setModalVisible(true)} />
-        <AddTimerModal
-          visible={modalVisible}
-          onClose={() => setModalVisible(false)}
-          onAddTimer={handleAddTimer}
-        />
-        <MessageModal
-          visible={message.visible}
-          onClose={timerIdToDelete ? cancelDelete : hideMessage}
-          title={message.title}
-          message={message.message}
-          type={message.type}
-          isConfirmation={timerIdToDelete !== null}
-          onConfirm={confirmDelete}
-        />
-      </View>
+        </View>
+      </SafeAreaView>
     </GestureHandlerRootView>
   );
 }

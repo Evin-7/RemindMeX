@@ -56,7 +56,7 @@ export default function AddTimerModal({
           <View className="flex-1 justify-end bg-black/50">
             <View
               className={`rounded-t-3xl p-6 ${isDark ? "bg-gray-900" : "bg-white"}`}
-              style={{ maxHeight: "90%" }}
+              style={{ maxHeight: "90%", paddingBottom: 35 }}
             >
               <ScrollView showsVerticalScrollIndicator={false}>
                 <ModalHeader
@@ -96,9 +96,7 @@ export default function AddTimerModal({
                     isDark={isDark}
                   />
                 )}
-
                 <QuickPresets onSelect={updateDuration} isDark={isDark} />
-
                 <SubmitButton onPress={handleSubmit} />
               </ScrollView>
             </View>

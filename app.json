@@ -6,43 +6,78 @@
     "orientation": "portrait",
     "icon": "./assets/icons/MainLogo.png",
     "scheme": "remindmex",
+
+    "notification": {
+      "icon": "./assets/icons/MainLogo.png",
+
+      "color": "#ffffff"
+    },
+
     "userInterfaceStyle": "automatic",
+    "splash": {
+      "resizeMode": "cover",
+      "image": "./assets/images/splash.png",
+      "backgroundColor": "#ffffff"
+    },
+
     "newArchEnabled": true,
+
     "web": {
       "output": "static",
       "favicon": "./assets/icons/MainLogo.png"
     },
+
     "extra": {
       "router": {
         "initialRouteName": "splash"
+      },
+      "eas": {
+        "projectId": "9e68cb07-1153-4a0c-a1a3-cdce39896c8e"
       }
     },
+
     "ios": {
       "supportsTablet": true
     },
+
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundImage": "./assets/images/android-icon-background.png",
-        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+        "foregroundImage": "./assets/icons/MainLogo.png",
+        "backgroundImage": "./assets/icons/MainLogo.png",
+        "monochromeImage": "./assets/icons/MainLogo.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.evin7.RemindMeX"
     },
+
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/icons/MainLogo.png",
-          "imageWidth": 200,
+          "backgroundColor": "#000000",
+          "image": "./assets/images/splash.png",
           "resizeMode": "cover",
-          "backgroundColor": "#ffffff"
+          "imageWidth": 200,
+          "dark": {
+            "backgroundColor": "#000000",
+            "image": "./assets/images/splash.png"
+          }
         }
       ],
-      "expo-font"
+      "expo-font",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/icons/MainLogo.png",
+          "color": "#ffffff",
+          "enableBackgroundRemoteNotifications": true
+        }
+      ]
     ],
+
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true

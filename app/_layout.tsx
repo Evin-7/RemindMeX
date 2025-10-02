@@ -27,7 +27,6 @@ function RootLayoutNav() {
       value={effectiveTheme === "dark" ? DarkTheme : DefaultTheme}
     >
       <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="splash" />
         <Stack.Screen name="index" />
       </Stack>
       <StatusBar style={effectiveTheme === "dark" ? "light" : "dark"} />
