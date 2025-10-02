@@ -12,9 +12,10 @@ import MessageModal from "@/components/MessageModal";
 import { useTheme } from "@/contexts/ThemeContext";
 import { TimerFormData } from "@/hooks/useTimers";
 import TimerLabelInput from "./TimerLabelInput";
-import TimerDurationInputs from "./TimerDurationInputs";
 import RecurringTimerToggle from "./RecurringTimerToggle";
+import TimerDurationInputs from "./TimerDurationInputs";
 import TimerPresets from "./TimerPresets";
+import { X } from "lucide-react-native";
 
 interface AddTimerModalProps {
   visible: boolean;
@@ -119,7 +120,7 @@ export default function AddTimerModal({
         >
           <View className="flex-1 justify-end bg-black/50">
             <View
-              className={`rounded-t-3xl p-6 max-h-[90%] ${isDark ? "bg-gray-900" : "bg-white"}`}
+              className={`rounded-t-3xl p-6 max-h-[90%] ${isDark ? "bg-darkGray" : "bg-white"}`}
             >
               <ScrollView showsVerticalScrollIndicator={false}>
                 <View className="flex-row justify-between items-center mb-6">
@@ -131,11 +132,12 @@ export default function AddTimerModal({
                     Create Timer
                   </Text>
                   <TouchableOpacity onPress={onClose}>
-                    <Text className="text-2xl text-gray-500">✕</Text>
+                    <X size={24} color={isDark ? "#ffffff" : "#1f2937"} />
                   </TouchableOpacity>
                 </View>
                 <TimerLabelInput
                   value={formData.label}
+                  isDark={isDark}
                   onChange={(text) => updateField("label", text)}
                 />
                 <TimerDurationInputs

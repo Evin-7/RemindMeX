@@ -28,7 +28,7 @@ export default function RecurringTimerToggle({
             Recurring Timer
           </Text>
           <Text
-            className={`text-xs font-poppins ${isDark ? "text-gray-400" : "text-gray-600"}`}
+            className={`text-xs font-poppins ${isDark ? "text-white" : "text-gray-600"}`}
           >
             Automatically restart when complete
           </Text>
@@ -36,7 +36,7 @@ export default function RecurringTimerToggle({
         <Switch
           value={recurring}
           onValueChange={(value) => onChange("recurring", value)}
-          trackColor={{ false: "#767577", true: "darkGreen" }}
+          trackColor={{ false: "#767577", true: "#2E6F40" }}
           thumbColor={recurring ? "#fff" : "#f4f3f4"}
         />
       </View>
@@ -44,11 +44,11 @@ export default function RecurringTimerToggle({
       {recurring && (
         <View className="mb-4">
           <Text
-            className={`text-sm font-poppins-medium mb-2 ${isDark ? "text-gray-300" : "text-gray-700"}`}
+            className={`text-sm font-poppins-medium mb-2 ${isDark ? "text-lightGray" : "text-gray-700"}`}
           >
             Repeat
           </Text>
-          <View className="flex-row space-x-2">
+          <View className="flex-row space-x-4 gap-4">
             {["daily", "weekly"].map((option) => (
               <TouchableOpacity
                 key={option}
@@ -57,8 +57,8 @@ export default function RecurringTimerToggle({
                   interval === option
                     ? "bg-darkGreen"
                     : isDark
-                      ? "bg-darkGrey"
-                      : "bg-lightGrey"
+                      ? "bg-gray"
+                      : "bg-lightGray"
                 }`}
               >
                 <Text

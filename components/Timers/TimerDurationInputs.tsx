@@ -17,14 +17,14 @@ export default function TimerDurationInputs({
   onChange,
 }: TimerDurationInputsProps) {
   const inputClass = `p-3 rounded-xl text-center font-poppins-semibold text-lg ${
-    isDark ? "bg-gray-800 text-white" : "bg-gray-100 text-gray-900"
+    isDark ? "bg-white text-darkGray" : "bg-lightGray text-gray-900"
   }`;
 
   return (
     <View>
       <Text
         className={`text-sm font-poppins-medium mb-3 ${
-          isDark ? "text-gray-300" : "text-gray-700"
+          isDark ? "text-white" : "text-gray-700"
         }`}
       >
         Duration
@@ -32,7 +32,7 @@ export default function TimerDurationInputs({
       <View className="flex-row justify-between mb-6">
         <View className="flex-1 mr-2">
           <Text
-            className={`text-xs mb-1 ${isDark ? "text-gray-400" : "text-gray-600"}`}
+            className={`text-xs mb-1 ${isDark ? "text-white" : "text-gray-600"}`}
           >
             Hours
           </Text>
@@ -45,7 +45,7 @@ export default function TimerDurationInputs({
         </View>
         <View className="flex-1 mx-1">
           <Text
-            className={`text-xs mb-1 ${isDark ? "text-gray-400" : "text-gray-600"}`}
+            className={`text-xs mb-1 ${isDark ? "text-white" : "text-gray-600"}`}
           >
             Minutes
           </Text>
@@ -60,7 +60,7 @@ export default function TimerDurationInputs({
         </View>
         <View className="flex-1 ml-2">
           <Text
-            className={`text-xs mb-1 ${isDark ? "text-gray-400" : "text-gray-600"}`}
+            className={`text-xs mb-1 ${isDark ? "text-white" : "text-gray-600"}`}
           >
             Seconds
           </Text>

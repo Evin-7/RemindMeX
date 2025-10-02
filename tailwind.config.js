@@ -10,6 +10,7 @@ module.exports = {
         lightGray: "#f3f4f6",
         mediumGray: "#d1d5db",
         gray: "#374151",
+        white: "#ffffff",
       },
       backgroundImage: {
         "teal-green": "linear-gradient(to bottom right, #ffffff, #86efac)",

@@ -39,7 +39,7 @@ export default function TimerHeader({ timer, isDark, onDelete }: any) {
       <View className="flex-row items-center gap-2">
         <View
           className="px-2 py-0.5 rounded-full"
-          style={{ backgroundColor: `${getStatusColor()}30` }}
+          style={{ backgroundColor: `${getStatusColor()}20` }}
         >
           <Text
             className="text-xs font-poppins-bold"

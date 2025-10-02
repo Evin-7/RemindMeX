@@ -23,7 +23,7 @@ export default function TimerPresets({ isDark, onSelect }: TimerPresetsProps) {
   return (
     <View>
       <Text
-        className={`text-sm font-poppins-medium mb-3 ${isDark ? "text-gray-300" : "text-gray-700"}`}
+        className={`text-sm font-poppins-medium mb-3 ${isDark ? "text-white" : "text-gray-700"}`}
       >
         Quick Presets
       </Text>
@@ -33,7 +33,7 @@ export default function TimerPresets({ isDark, onSelect }: TimerPresetsProps) {
             key={preset.label}
             onPress={() => onSelect(preset)}
             className={`px-4 py-2 rounded-full mr-2 mb-2 ${
-              isDark ? "bg-gray-800" : "bg-gray-100"
+              isDark ? "bg-white" : "bg-lightGray"
             }`}
           >
             <Text
