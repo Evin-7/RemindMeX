@@ -88,6 +88,9 @@ export default function Index() {
     const deleteMessage = handleDeleteTimer(id, label);
     setMessage({ visible: true, ...deleteMessage });
   };
+  const hideMessage = () => {
+    setMessage((prev) => ({ ...prev, visible: false }));
+  };
 
   if (isLoading) {
     return <LoadingScreen isDark={isDark} />;
@@ -125,7 +128,7 @@ export default function Index() {
         />
         <MessageModal
           visible={message.visible}
-          onClose={cancelDelete}
+          onClose={timerIdToDelete ? cancelDelete : hideMessage}
           title={message.title}
           message={message.message}
           type={message.type}
