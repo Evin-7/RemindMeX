@@ -16,16 +16,16 @@ export const PrimaryActionButton: React.FC<Props> = ({
   onStart,
   onPause,
   onResume,
-  onReset,
 }) => {
+  const isCompleted =
+    timer.status === "completed" ||
+    (timer.status === "running" && timer.remainingTime === 0);
+
   const handlePrimaryAction = () => {
-    if (timer.status === "idle" || timer.status === "completed") {
-      if (timer.status === "completed") {
-        onReset(timer.id);
-        setTimeout(() => onStart(timer.id), 100);
-      } else {
-        onStart(timer.id);
-      }
+    if (isCompleted) {
+      onResume(timer.id);
+    } else if (timer.status === "idle") {
+      onStart(timer.id);
     } else if (timer.status === "running") {
       onPause(timer.id);
     } else if (timer.status === "paused") {
@@ -34,32 +34,26 @@ export const PrimaryActionButton: React.FC<Props> = ({
   };
 
   const getButtonText = () => {
-    switch (timer.status) {
-      case "running":
-        return "Pause";
-      case "paused":
-        return "Resume";
-      case "completed":
-        return "Restart";
-      default:
-        return "Start";
-    }
+    if (isCompleted) return "Restart";
+    if (timer.status === "running") return "Pause";
+    if (timer.status === "paused") return "Resume";
+    return "Start";
   };
 
   const getButtonIcon = () => {
     const iconColor = "#FFFFFF";
     const iconSize = 18;
 
-    switch (timer.status) {
-      case "running":
-        return <Pause size={iconSize} color={iconColor} fill={iconColor} />;
-      case "paused":
-        return <Play size={iconSize} color={iconColor} fill={iconColor} />;
-      case "completed":
-        return <RefreshCw size={iconSize} color={iconColor} />;
-      default:
-        return <Play size={iconSize} color={iconColor} fill={iconColor} />;
+    if (isCompleted) {
+      return <RefreshCw size={iconSize} color={iconColor} />;
     }
+    if (timer.status === "running") {
+      return <Pause size={iconSize} color={iconColor} fill={iconColor} />;
+    }
+    if (timer.status === "paused") {
+      return <Play size={iconSize} color={iconColor} fill={iconColor} />;
+    }
+    return <Play size={iconSize} color={iconColor} fill={iconColor} />;
   };
 
   return (
@@ -68,11 +62,7 @@ export const PrimaryActionButton: React.FC<Props> = ({
       className="py-2.5 rounded-lg shadow-sm flex-row items-center justify-center"
       style={{
         backgroundColor:
-          timer.status === "running"
-            ? "#F59E0B"
-            : timer.status === "paused"
-              ? "#2E6F40"
-              : "#2E6F40",
+          timer.status === "running" && !isCompleted ? "#F59E0B" : "#2E6F40",
       }}
     >
       {getButtonIcon()}

@@ -103,16 +103,13 @@ export function useTimers() {
     setTimers((prevTimers) => {
       const updatedTimers = prevTimers.map((timer) => {
         if (timer.status !== "running") return timer;
-
-        // Recalculate based on timestamp for accuracy
         const actualRemaining = recalculateRemainingTime(timer);
         const newRemainingTime = Math.max(0, actualRemaining);
-
-        if (newRemainingTime === 0 && timer.remainingTime > 0) {
-          triggerHapticFeedback("heavy");
-
-          // Handle recurring timers
-          if (timer.recurring?.enabled) {
+        if (newRemainingTime === 0 && timer.status === "running") {
+          if (timer.remainingTime > 0) {
+            triggerHapticFeedback("heavy");
+          }
+          if (timer.recurring?.enabled && timer.remainingTime > 0) {
             return {
               ...timer,
               remainingTime: timer.duration,
@@ -121,11 +118,18 @@ export function useTimers() {
             };
           }
 
+          if (timer.notificationId) {
+            cancelNotification(timer.notificationId).catch((error) => {
+              console.error("Failed to cancel notification:", error);
+            });
+          }
+
           return {
             ...timer,
             remainingTime: 0,
             status: "completed" as const,
             completedAt: Date.now(),
+            notificationId: undefined,
           };
         }
 
@@ -150,7 +154,6 @@ export function useTimers() {
       }
 
       if (totalSeconds > 86400) {
-        // 24 hours
         throw new Error("Timer duration cannot exceed 24 hours");
       }
 
@@ -285,9 +288,40 @@ export function useTimers() {
 
   const resumeTimer = useCallback(
     async (timerId: string) => {
-      await startTimer(timerId);
+      try {
+        const timer = timers.find((t) => t.id === timerId);
+        if (!timer) return;
+
+        if (timer.status === "completed") {
+          setTimers((prev) =>
+            prev.map((t) =>
+              t.id === timerId
+                ? {
+                    ...t,
+                    remainingTime: t.duration,
+                    status: "idle" as const,
+                    startedAt: undefined,
+                    pausedAt: undefined,
+                    completedAt: undefined,
+                    notificationId: undefined,
+                  }
+                : t,
+            ),
+          );
+          setTimeout(async () => {
+            await startTimer(timerId);
+          }, 150);
+        } else if (timer.status === "paused") {
+          await startTimer(timerId);
+        }
+
+        triggerHapticFeedback("medium");
+      } catch (error) {
+        console.error("Error resuming timer:", error);
+        throw error;
+      }
     },
-    [startTimer],
+    [timers, startTimer],
   );
 
   const resetTimer = useCallback(async (timerId: string) => {

@@ -18,7 +18,11 @@ export const LeftActions: React.FC<Props> = ({
   onResume,
   swipeableRef,
 }) => {
-  if (timer.status === "running") {
+  const isCompleted =
+    timer.status === "completed" ||
+    (timer.status === "running" && timer.remainingTime === 0);
+
+  if (timer.status === "running" && !isCompleted) {
     return (
       <RectButton
         onPress={() => {
@@ -41,7 +45,7 @@ export const LeftActions: React.FC<Props> = ({
         </Text>
       </RectButton>
     );
-  } else if (timer.status === "paused") {
+  } else if (timer.status === "paused" || isCompleted) {
     return (
       <RectButton
         onPress={() => {
@@ -60,7 +64,7 @@ export const LeftActions: React.FC<Props> = ({
       >
         <Play size={20} color="#FFFFFF" fill="#FFFFFF" />
         <Text className="text-xs font-poppins-medium mt-1 text-white">
-          Resume
+          {isCompleted ? "Restart" : "Resume"}
         </Text>
       </RectButton>
     );
