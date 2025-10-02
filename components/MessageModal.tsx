@@ -20,7 +20,7 @@ export default function MessageModal({
   message,
   type = "success",
   isConfirmation = false,
-  onConfirm = onClose, 
+  onConfirm = onClose,
 }: MessageModalProps) {
   const { effectiveTheme } = useTheme();
   const isDark = effectiveTheme === "dark";
@@ -60,10 +60,7 @@ export default function MessageModal({
             >
               {title}
             </Text>
-            <TouchableOpacity
-              onPress={onClose} 
-              className="p-1 rounded-full"
-            >
+            <TouchableOpacity onPress={onClose} className="p-1 rounded-full">
               <X size={24} color={getIconColor()} />
             </TouchableOpacity>
           </View>

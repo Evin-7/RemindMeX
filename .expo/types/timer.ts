@@ -1,7 +1,7 @@
 export interface Timer {
   id: string;
   label: string;
-  duration: number; // in seconds
+  duration: number;
   remainingTime: number;
   status: "idle" | "running" | "paused" | "completed";
   createdAt: number;
@@ -12,7 +12,7 @@ export interface Timer {
   recurring?: {
     enabled: boolean;
     interval: "daily" | "weekly" | "custom";
-    customDays?: number[]; // 0-6 for Sun-Sat
+    customDays?: number[];
   };
 }
 

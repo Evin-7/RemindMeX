@@ -295,7 +295,6 @@ export function useTimers() {
       setTimers((prev) =>
         prev.map((timer) => {
           if (timer.id !== timerId) return timer;
-
           if (timer.notificationId) {
             cancelNotification(timer.notificationId).catch((error) => {
               console.error("Failed to cancel notification:", error);

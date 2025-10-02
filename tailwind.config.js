@@ -6,7 +6,10 @@ module.exports = {
       colors: {
         darkGreen: "#2E6F40",
         lightGreen: "#86efac",
-        darkGrey: "#1f2937",
+        darkGray: "#1f2937",
+        lightGray: "#f3f4f6",
+        mediumGray: "#d1d5db",
+        gray: "#374151",
       },
       backgroundImage: {
         "teal-green": "linear-gradient(to bottom right, #ffffff, #86efac)",
@@ -16,8 +19,6 @@ module.exports = {
         "poppins-medium": ["Poppins_500Medium", "sans-serif"],
         "poppins-semibold": ["Poppins_600SemiBold", "sans-serif"],
         "poppins-bold": ["Poppins_700Bold", "sans-serif"],
-
-        // Italics
         "poppins-italic": ["Poppins_400Regular_Italic", "sans-serif"],
         "poppins-medium-italic": ["Poppins_500Medium_Italic", "sans-serif"],
         "poppins-semibold-italic": ["Poppins_600SemiBold_Italic", "sans-serif"],
