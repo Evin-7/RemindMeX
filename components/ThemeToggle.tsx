@@ -11,12 +11,12 @@ export default function ThemeToggle() {
     <View className="flex-row items-center">
       <TouchableOpacity
         onPress={() => setTheme(theme === "dark" ? "light" : "dark")}
-        className={`p-2 rounded-lg ${isDark ? "bg-gray-700" : "bg-gray-200"}`}
+        className={`p-2 rounded-lg ${isDark ? "bg-gray-700" : "bg-darkGreen"}`}
       >
         {isDark ? (
-          <Moon size={22} color="white" strokeWidth={2} />
+          <Moon size={35} color="white" strokeWidth={2} />
         ) : (
-          <Sun size={22} color="black" strokeWidth={2} />
+          <Sun size={35} color="white" strokeWidth={2} />
         )}
       </TouchableOpacity>
     </View>

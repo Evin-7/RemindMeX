@@ -20,16 +20,17 @@ export default function EmptyState({
         color={isDark ? "#D1D5DB" : "#4B5563"}
         className="mb-4"
       />
+
       <Text
         className={`text-2xl font-poppins-bold text-center mb-2 ${
-          isDark ? "text-white" : "text-darkGray"
+          isDark ? "text-lightGray" : "text-darkGray"
         }`}
       >
         No Timers Yet
       </Text>
       <Text
-        className={`text-center font-poppins ${
-          isDark ? "text-gray-300" : "text-darkGray"
+        className={`text-center -mt-[4px] font-poppins ${
+          isDark ? "text-lightGray" : "text-gray-600"
         }`}
       >
         Create your first timer to get started

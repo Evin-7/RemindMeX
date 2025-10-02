@@ -144,7 +144,11 @@ export default function Index() {
         <Header />
 
         {timers.length === 0 ? (
-          <EmptyState permissionStatus={permissionStatus} />
+          <EmptyState
+            permissionStatus={permissionStatus}
+            onEnableNotifications={requestNotificationPermissions}
+            isDark={isDark}
+          />
         ) : (
           <DraggableFlatList
             data={timers}
