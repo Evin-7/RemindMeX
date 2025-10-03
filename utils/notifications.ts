@@ -40,7 +40,7 @@ export async function scheduleTimerNotification(
   const notificationId = await Notifications.scheduleNotificationAsync({
     content: {
       title: `"${label}" completed!`,
-      body: `That’s done! Ready for your next?`,
+      body: `All set! What’s next on your list?`,
       sound: true,
       priority: Notifications.AndroidNotificationPriority.MAX,
       vibrate: [0, 250, 250, 250],
