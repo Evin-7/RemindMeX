@@ -42,7 +42,7 @@ export async function scheduleTimerNotification(
       title: `"${label}" completed!`,
       body: `That’s done! Ready for your next?`,
       sound: true,
-      priority: Notifications.AndroidNotificationPriority.HIGH,
+      priority: Notifications.AndroidNotificationPriority.MAX,
       vibrate: [0, 250, 250, 250],
       data: { timerId },
     },
