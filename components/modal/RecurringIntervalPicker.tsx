@@ -20,12 +20,12 @@ export default function RecurringIntervalPicker({
       >
         Repeat
       </Text>
-      <View className="flex-row space-x-2">
+      <View className="flex-row space-x-2 gap-3">
         <TouchableOpacity
           onPress={() => onChange("daily")}
           className={`flex-1 p-3 rounded-xl ${
             value === "daily"
-              ? "bg-blue-500"
+              ? "bg-darkGreen"
               : isDark
                 ? "bg-gray-800"
                 : "bg-gray-100"
@@ -47,7 +47,7 @@ export default function RecurringIntervalPicker({
           onPress={() => onChange("weekly")}
           className={`flex-1 p-3 rounded-xl ${
             value === "weekly"
-              ? "bg-blue-500"
+              ? "bg-darkGreen"
               : isDark
                 ? "bg-gray-800"
                 : "bg-gray-100"

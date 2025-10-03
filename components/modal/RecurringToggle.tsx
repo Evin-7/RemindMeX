@@ -36,7 +36,7 @@ export default function RecurringToggle({
       <Switch
         value={value}
         onValueChange={onChange}
-        trackColor={{ false: "#767577", true: "#3B82F6" }}
+        trackColor={{ false: "#767577", true: "#2E6F40" }}
         thumbColor={value ? "#fff" : "#f4f3f4"}
       />
     </View>
